@@ -1,9 +1,9 @@
 import express from "express";
 
-const app = express();
+const router = express.Router();
 
 // Test route to check if the server is running
-app.get("/test", (req, res) => {
+router.get("/test", (req, res) => {
     res.status(200).json({ message: "Server is running" });
 });
-export default app;
+export default router;
