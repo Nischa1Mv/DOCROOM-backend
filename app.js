@@ -2,12 +2,12 @@ import express from "express";
 import cors from "cors";
 import passport from "passport";
 import 'dotenv/config';
-// import todoRoute from "./routes/todoRoute.js";
 import authRoute from "./routes/authRoute.js";
-import test from "./routes/test.js";
-// import { Strategy as JwtStrategy } from 'passport-jwt';
-// import { ExtractJwt } from 'passport-jwt';
-// import { User } from "./models/userModel.js";
+import test from "./test.js";
+import PatientRecord from "./routes/patientRecord.js";
+import createPatient from "./routes/createPatient.js";
+import botSummary from "./routes/botSummary.js";
+
 
 
 const app = express();
@@ -25,23 +25,8 @@ app.use(passport.initialize());
 
 var opts = {}
 
-// opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-// opts.secretOrKey = process.env.SECRET;
-
-// passport.use(new JwtStrategy(opts, async function (jwt_payload, done) {
-//     try {
-//         const user = await User.findById(jwt_payload.id);
-//         if (user) {
-//             return done(null, user);
-//         } else {
-//             return done(null, false);
-//         }
-//     } catch (error) {
-//         return done(error, false);
-//     }
-// }));
-
 app.get('/', function (req, res) {
+    z
     res.send({
         message: "working"
     });
@@ -49,6 +34,9 @@ app.get('/', function (req, res) {
 
 app.use('/auth', authRoute);
 app.use('/test', test);
-// app.use('/todo', todoRoute);
+app.use('/patientRecord', PatientRecord)
+app.use('/createPatient', createPatient);
+app.use('/botSummary', botSummary);
+
 
 export default app;

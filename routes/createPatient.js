@@ -1,10 +1,10 @@
 import express from "express";
-import Patient from "../models/Patient.js";
+import Patient from "../models/patientModel.js"
 
 const router = express.Router();
 
 // Create a new patient with default/null values for other fields
-router.post("/create-patient", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { name, phoneNumber, age, gender } = req.body;
 
@@ -39,4 +39,3 @@ export default router;
 //     "age": 30,
 //     "gender": "Male"
 //   }
-  

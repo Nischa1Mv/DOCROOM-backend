@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 const userSchema = new mongoose.Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    name: { type: String, required: true },
+    name: { type: String, },
     phone: String,
     specialization: String,  // Fixed typo
     patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Patient" }],
