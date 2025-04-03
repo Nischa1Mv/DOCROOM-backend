@@ -4,6 +4,7 @@ import passport from "passport";
 import 'dotenv/config';
 // import todoRoute from "./routes/todoRoute.js";
 import authRoute from "./routes/authRoute.js";
+import test from "./routes/test.js";
 // import { Strategy as JwtStrategy } from 'passport-jwt';
 // import { ExtractJwt } from 'passport-jwt';
 // import { User } from "./models/userModel.js";
@@ -47,6 +48,7 @@ app.get('/', function (req, res) {
 });
 
 app.use('/auth', authRoute);
+app.use('/test', test);
 // app.use('/todo', todoRoute);
 
 export default app;
