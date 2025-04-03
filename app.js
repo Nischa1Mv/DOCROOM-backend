@@ -3,7 +3,6 @@ import cors from "cors";
 import passport from "passport";
 import 'dotenv/config';
 import authRoute from "./routes/authRoute.js";
-import test from "./test.js";
 import PatientRecord from "./routes/patientRecord.js";
 import createPatient from "./routes/createPatient.js";
 import botSummary from "./routes/botSummary.js";
@@ -33,7 +32,6 @@ app.get('/', function (req, res) {
 });
 
 app.use('/auth', authRoute);
-app.use('/test', test);
 app.use('/patientRecord', PatientRecord)
 app.use('/createPatient', createPatient);
 app.use('/botSummary', botSummary);

@@ -1,7 +1,5 @@
 import express from "express";
 import { User } from "../models/userModel.js";
-import PatientRecord from "../models/patientRecord.js";
-import Patient from "../models/patientModel.js";
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -14,7 +12,7 @@ router.get("/", async (req, res) => {
 
         // Find doctor and populate patient records
         const doctor = await User.findById(doctorId).populate({
-            path: "patientRecord",
+            path: "patientRecords",
             match: { isClosed: false },
             populate: { path: "patient", select: "name age gender" }, // Correct field name
             select: "BOT timeStampBegin patient", // Correct selection of fields
