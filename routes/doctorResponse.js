@@ -1,27 +1,30 @@
 import express from "express";
 import PatientRecord from "../models/PatientRecord.js";
-import Patient from "../models/Patient.js";
+import Patient from "../models/patientModel.js";
 import Conversation from "../models/Conversation.js";
 
 const router = express.Router();
 
 // Send Message on Behalf of Doctor and Close the Patient Record
-router.post("/send-message", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
-        const { patientRecordId, message } = req.body;
+        const { patientRecordId, finalResponse } = req.body;
 
-        if (!patientRecordId || !message) {
-            return res.status(400).json({ message: "Patient Record ID and message are required" });
+        if (!patientRecordId || !finalResponse) {
+            return res.status(400).json({ message: "Patient Record ID and Final Response are required" });
         }
 
-        // Step 1: Find the Patient ID from the PatientRecord
-        const patientRecord = await PatientRecord.findById(patientRecordId).select("Patient");
+        // Step 1: Find the Patient Record 
+        const patientRecord = await PatientRecord.findById(patientRecordId);
 
         if (!patientRecord) {
             return res.status(404).json({ message: "Patient record not found" });
         }
 
-        const patientId = patientRecord.Patient;
+        const patientId = patientRecord.patient;
+        if (!patientId) {
+            return res.status(404).json({ message: "Patient ID not found in the record" });
+        }
 
         // Step 2: Find the patient's conversation ID
         const patient = await Patient.findById(patientId).select("conversation");
@@ -30,26 +33,38 @@ router.post("/send-message", async (req, res) => {
             return res.status(404).json({ message: "Patient or conversation not found" });
         }
 
-        // Step 3: Add a new message from the doctor to the conversation
-        const newMessage = new Conversation({
-            sender: "doctor",
-            message: message,
-            timestamp: new Date(),
-        });
+        const conversationId = patient.conversation;
 
-        await newMessage.save();
+        // Step 3: Append the final response to the conversation
+        const updatedConversation = await Conversation.findByIdAndUpdate(
+            conversationId,
+            {
+                $push: {
+                    messages: {
+                        sender: "doctor",
+                        message: finalResponse,
+                        timestamp: new Date(),
+                    },
+                },
+            },
+            { new: true }
+        );
+
+        if (!updatedConversation) {
+            return res.status(404).json({ message: "Conversation not found" });
+        }
 
         // Step 4: Mark the patient record as closed
         patientRecord.isClosed = true;
         await patientRecord.save();
 
-        res.status(200).json({ 
+        res.status(200).json({
             message: "Message sent and patient record closed successfully",
             data: {
                 sender: "doctor",
-                message: message,
-                timestamp: newMessage.timestamp
-            }
+                message: finalResponse,
+                timestamp: new Date(),
+            },
         });
     } catch (error) {
         console.error("Error sending message:", error);
@@ -58,11 +73,3 @@ router.post("/send-message", async (req, res) => {
 });
 
 export default router;
-
-
-//WE CAN ALSO DO LIKE LATEST PATIENT RECORD TO CLOSE THE RECORD , ISTEAD OF PSSING THE RCROD
-// {
-//     "sender": "doctor",
-//     "message": "Your test results are normal. Let me know if you need anything else.",
-//     "timestamp": "2025-04-03T08:30:00Z"
-//   }
