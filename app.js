@@ -7,6 +7,7 @@ import PatientRecord from "./routes/patientRecord.js";
 import createPatient from "./routes/createPatient.js";
 import botSummary from "./routes/botSummary.js";
 import doctorResponse from "./routes/doctorResponse.js"
+import patients from "./routes/patients.js"
 
 
 
@@ -25,8 +26,8 @@ app.use(passport.initialize());
 
 var opts = {}
 
-app.get('/', function (req, res) {
-    z
+app.get('/', function (_, res) {
+
     res.send({
         message: "working"
     });
@@ -37,6 +38,7 @@ app.use('/patientRecord', PatientRecord)
 app.use('/createPatient', createPatient);
 app.use('/botSummary', botSummary);
 app.use('/doctorResponse', doctorResponse);
+app.use('/patients', patients)
 
 
 export default app;
