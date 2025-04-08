@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import Patient from "../models/patientModel.js";
-import PatientRecord from "../models/PatientRecord.js";
+import PatientRecord from "../models/patientRecord.js"
 import Conversation from "../models/Conversation.js";
 import { User } from "../models/userModel.js";
 
