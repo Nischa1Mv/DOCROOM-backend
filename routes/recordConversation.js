@@ -1,7 +1,7 @@
 import express from "express";
-import PatientRecord from "../models/PatientRecord.js";
-import Patient from "../models/Patient.js";
-import Conversation from "../models/Conversation.js";
+import PatientRecord from "../models/patientRecord.js";
+import Patient from "../models/patientModel.js";
+import Conversation from "../models/conversation.js";
 
 const router = express.Router();
 

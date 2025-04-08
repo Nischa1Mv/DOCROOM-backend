@@ -1,5 +1,4 @@
 import express from 'express';
-import Patient from '../models/patientModel.js'; // Add .js if using ESModules
 import { User } from '../models/userModel.js';
 
 const router = express.Router();

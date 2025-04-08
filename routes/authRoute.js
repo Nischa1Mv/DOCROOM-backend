@@ -1,5 +1,4 @@
 import express from "express";
-import passport from "passport";
 import { User } from "../models/userModel.js";
 import { compareSync, hashSync } from "bcrypt";
 import jwt from "jsonwebtoken";
