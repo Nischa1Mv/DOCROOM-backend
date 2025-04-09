@@ -2,11 +2,31 @@ import express from "express";
 import PatientRecord from "../models/patientRecord.js";
 import Patient from "../models/patientModel.js";
 import Conversation from "../models/conversation.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
 
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers["authorization"];
+    if (!bearerHeader || !bearerHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Invalid or missing token." });
+    }
+    const token = bearerHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Access denied. No token provided." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET);
+        next();
+    } catch (error) {
+        res.status(400).json({ message: "Invalid token." });
+    }
+};
 // Send Message on Behalf of Doctor and Close the Patient Record
-router.post("/", async (req, res) => {
+router.post("/", verifyToken, async (req, res) => {
     try {
         const { patientRecordId, finalResponse } = req.body;
 
@@ -73,3 +93,12 @@ router.post("/", async (req, res) => {
 });
 
 export default router;
+// // Example response structure
+// {
+//     "message": "Message sent and patient record closed successfully",
+//     "data": {
+//         "sender": "doctor",
+//         "message": "AI suggests a possible viral infection.",
+//         "timestamp": "2025-04-09T09:30:51.105Z"
+//     }
+// }
