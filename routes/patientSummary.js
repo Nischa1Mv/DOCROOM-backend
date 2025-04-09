@@ -1,12 +1,35 @@
 import express from "express";
 import PatientRecord from "../models/patientRecord.js";
+import jwt from "jsonwebtoken";
 
 const router = express.Router();
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers["authorization"];
+    if (!bearerHeader || !bearerHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Invalid or missing token." });
+    }
+    const token = bearerHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Access denied. No token provided." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET);
+        next();
+    } catch (error) {
+        res.status(400).json({ message: "Invalid token." });
+    }
+};
 
 // Get patient summary from record ID
-router.get("/patient-summary", async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
     try {
-        const { recordId } = req.params;
+        const { id: recordId } = req.params;
+        if (!recordId) {
+            return res.status(400).json({ message: "Record ID is required" });
+        }
 
         // Find the patient record and populate patient details
         const patientRecord = await PatientRecord.findById(recordId).populate({
@@ -22,10 +45,10 @@ router.get("/patient-summary", async (req, res) => {
         const patientSummary = {
             patient: patientRecord.patient,
             reportedSymptoms: patientRecord.BOT?.reportedSymptoms || "N/A",
-            aiDiagnosis: patientRecord.BOT?.AIdiagnosis || "N/A",
+            aiDiagnosis: patientRecord.BOT?.AIDiagnosis || "N/A",
             priorityStatus: patientRecord.BOT?.priorityStatus || "N/A",
             aiSummary: patientRecord.BOT?.aiSummary || "N/A",
-            recordedAt: patientRecord.timeStampBegin
+            recordedAt: patientRecord.timeStampBegin,
         };
 
         res.status(200).json({ patientSummary });
@@ -40,18 +63,23 @@ export default router;
 // Example response structure
 // {
 //     "patientSummary": {
-//       "patient": {
-//         "_id": "patient456",
-//         "name": "John Doe",
-//         "age": 30,
-//         "gender": "Male",
-//         "phoneNumber": "123-456-7890"
-//       },
-//       "reportedSymptoms": "Fever, Cough",
-//       "aiDiagnosis": "Possible Flu",
-//       "priorityStatus": "high",
-//       "aiSummary": "Patient likely has flu symptoms, recommended rest and hydration.",
-//       "recordedAt": "2025-04-03T08:00:00Z"
+//         "patient": {
+//             "_id": "67eec58fe902b670b9976761",
+//             "doctor": "67eec1d481c7f71a39c9e1f9",
+//             "name": "NIhil",
+//             "phoneNumber": "1234567890",
+//             "lastRecord": "2025-04-03T18:11:35.896Z",
+//             "age": 44,
+//             "gender": "male",
+//             "conversation": "67eecdad7937a752082bfd44",
+//             "createdAt": "2025-04-03T17:29:51.081Z",
+//             "updatedAt": "2025-04-03T18:11:35.897Z",
+//             "__v": 0
+//         },
+//         "reportedSymptoms": "Headache, fever",
+//         "aiDiagnosis": "Viral infection",
+//         "priorityStatus": "medium",
+//         "aiSummary": "Patient reported headache and fever. AI suggests a possible viral infection.",
+//         "recordedAt": "2025-04-03T18:11:35.940Z"
 //     }
-//   }
-  
+// }
