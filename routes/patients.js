@@ -1,10 +1,32 @@
 import express from 'express';
 import { User } from '../models/userModel.js';
+import jwt from "jsonwebtoken"
 
 const router = express.Router();
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers["authorization"];
+    if (!bearerHeader || !bearerHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Invalid or missing token." });
+    }
+    const token = bearerHeader.split(" ")[1];
 
-router.get('/', async (req, res) => {
-    const { doctorId } = req.body;
+    if (!token) {
+        return res.status(401).json({ message: "Access denied. No token provided." });
+    }
+
+    try {
+        const decoded = jwt.verify(token, process.env.SECRET);
+        console.log("Decoded Token:", decoded);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(400).json({ message: "Invalid token." });
+    }
+};
+
+router.get('/', verifyToken, async (req, res) => {
+    const { id: doctorId } = req.user;
 
     if (!doctorId) {
         return res.status(400).json({ message: "Doctor ID is required" });
@@ -39,3 +61,10 @@ router.get('/', async (req, res) => {
 });
 
 export default router;
+//output
+// {
+//     "message": "Patients retrieved successfully",
+//     "patients": [
+//         "67eec58fe902b670b9976761"
+//     ]
+// }
