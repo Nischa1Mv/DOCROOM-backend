@@ -9,6 +9,7 @@ import botSummary from "./routes/botSummary.js";
 import doctorResponse from "./routes/doctorResponse.js"
 import patients from "./routes/patients.js"
 import conversation from "./routes/conversation.js"
+import patientSummary from "./routes/patientSummary.js"
 
 
 
@@ -41,6 +42,7 @@ app.use('/botSummary', botSummary);
 app.use('/doctorResponse', doctorResponse);
 app.use('/patients', patients);
 app.use("/conversation", conversation)
+app.use("/patientSummary", patientSummary)
 
 
 export default app;
