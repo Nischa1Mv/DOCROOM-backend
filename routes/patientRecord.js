@@ -1,10 +1,35 @@
 import express from "express";
 import { User } from "../models/userModel.js";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+
+dotenv.config();
 const router = express.Router();
 
-router.get("/", async (req, res) => {
+// Middleware to verify JWT token
+const verifyToken = (req, res, next) => {
+    const bearerHeader = req.headers["authorization"];
+    if (!bearerHeader || !bearerHeader.startsWith("Bearer ")) {
+        return res.status(401).json({ message: "Invalid or missing token." });
+    }
+    const token = bearerHeader.split(" ")[1];
+
+    if (!token) {
+        return res.status(401).json({ message: "Access denied. No token provided." });
+    }
+
     try {
-        const { doctorId } = req.body;
+        const decoded = jwt.verify(token, process.env.SECRET);
+        console.log("Decoded Token:", decoded);
+        req.user = decoded;
+        next();
+    } catch (error) {
+        res.status(400).json({ message: "Invalid token." });
+    }
+};
+router.get("/", verifyToken, async (req, res) => {
+    try {
+        const { id: doctorId } = req.user;
 
         if (!doctorId) {
             return res.status(400).json({ message: "Doctor ID is required" });
