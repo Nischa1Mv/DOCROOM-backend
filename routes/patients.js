@@ -28,8 +28,8 @@ const verifyToken = (req, res, next) => {
     }
 };
 
-router.get('/:id', verifyToken, async (req, res) => {
-    const { id: doctorId } = req.params;
+router.get('/', verifyToken, async (req, res) => {
+    const { id: doctorId } = req.user;
 
     if (!doctorId) {
         return res.status(400).json({ message: "Doctor ID is required" });
