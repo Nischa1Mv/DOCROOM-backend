@@ -60,13 +60,13 @@ router.get('/', verifyToken, async (req, res) => {
                 const conversation = await Conversation.findOne({ patient: patient._id })
                     .sort({ "messages.timestamp": -1 })
                     .select("messages.timestamp");
-
                 const lastTimestamp = conversation?.messages?.[conversation.messages.length - 1]?.timestamp || null;
 
                 return {
                     name: patient.name,
                     phoneNumber: patient.phoneNumber,
                     lastTimestamp,
+                    patientId: patient._id,
                 };
             })
         );
