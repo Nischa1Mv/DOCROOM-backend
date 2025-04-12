@@ -24,9 +24,9 @@ const verifyToken = (req, res, next) => {
 };
 
 // Get Conversations by Patient ID
-router.get("/", verifyToken, async (req, res) => {
+router.get("/:id", verifyToken, async (req, res) => {
     try {
-        const { patientId } = req.body;
+        const { id: patientId } = req.params;
 
         if (!patientId) {
             return res.status(400).json({ message: "Patient ID is required" });
