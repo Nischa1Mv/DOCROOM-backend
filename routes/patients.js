@@ -1,8 +1,11 @@
 import express from 'express';
 import { User } from '../models/userModel.js';
-import jwt from "jsonwebtoken"
+import Patient from '../models/patientModel.js'; // Import the Patient model
+import jwt from "jsonwebtoken";
+import Conversation from '../models/conversation.js';
 
 const router = express.Router();
+
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
     const bearerHeader = req.headers["authorization"];
@@ -39,16 +42,38 @@ router.get('/:id', verifyToken, async (req, res) => {
             return res.status(404).json({ message: "Doctor not found" });
         }
 
-        // Adjust the field name based on your schema
-        const patients = doctor.patients || [];
+        const patientIds = doctor.patients || [];
+
+        if (patientIds.length === 0) {
+            return res.status(404).json({ message: "No patients found for this doctor" });
+
+        }
+
+        const patients = await Patient.find({ _id: { $in: patientIds } });
 
         if (patients.length === 0) {
-            return res.status(404).json({ message: "No patients found for this doctor" });
+            return res.status(404).json({ message: "No patient details found" });
         }
+
+        const patientDetails = await Promise.all(
+            patients.map(async (patient) => {
+                const conversation = await Conversation.findOne({ patient: patient._id })
+                    .sort({ "messages.timestamp": -1 })
+                    .select("messages.timestamp");
+
+                const lastTimestamp = conversation?.messages?.[conversation.messages.length - 1]?.timestamp || null;
+
+                return {
+                    name: patient.name,
+                    phoneNumber: patient.phoneNumber,
+                    lastTimestamp,
+                };
+            })
+        );
 
         return res.status(200).json({
             message: "Patients retrieved successfully",
-            patients,
+            patients: patientDetails,
         });
 
     } catch (error) {
@@ -61,10 +86,23 @@ router.get('/:id', verifyToken, async (req, res) => {
 });
 
 export default router;
-//output
+
+// Example response structure
 // {
 //     "message": "Patients retrieved successfully",
 //     "patients": [
-//         "67eec58fe902b670b9976761"
+//         {
+//             "_id": "67eec58fe902b670b9976761",
+//             "doctor": "67eec1d481c7f71a39c9e1f9",
+//             "name": "NIhil",
+//             "phoneNumber": "1234567890",
+//             "lastRecord": "2025-04-03T18:11:35.896Z",
+//             "age": 44,
+//             "gender": "male",
+//             "conversation": "67eecdad7937a752082bfd44",
+//             "createdAt": "2025-04-03T17:29:51.081Z",
+//             "updatedAt": "2025-04-03T18:11:35.897Z",
+//             "__v": 0
+//         }
 //     ]
 // }
