@@ -92,17 +92,9 @@ export default router;
 //     "message": "Patients retrieved successfully",
 //     "patients": [
 //         {
-//             "_id": "67eec58fe902b670b9976761",
-//             "doctor": "67eec1d481c7f71a39c9e1f9",
 //             "name": "NIhil",
 //             "phoneNumber": "1234567890",
-//             "lastRecord": "2025-04-03T18:11:35.896Z",
-//             "age": 44,
-//             "gender": "male",
-//             "conversation": "67eecdad7937a752082bfd44",
-//             "createdAt": "2025-04-03T17:29:51.081Z",
-//             "updatedAt": "2025-04-03T18:11:35.897Z",
-//             "__v": 0
+//             "lastTimestamp": "2025-04-09T09:30:50.787Z"
 //         }
 //     ]
 // }
