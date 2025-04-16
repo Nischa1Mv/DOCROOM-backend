@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import Patient from "../models/patientModel.js";
 import PatientRecord from "../models/patientRecord.js";
+import { User } from "../models/userModel.js";
 
 
 dotenv.config();
@@ -33,10 +34,13 @@ const verifyToken = (req, res, next) => {
 router.get("/", verifyToken, async (req, res) => {
     try {
         const { id: doctorId } = req.user;
-        console.log("Doctor ID:", doctorId);
 
         if (!doctorId) {
             return res.status(400).json({ message: "Doctor ID is required" });
+        }
+        const doctor = await User.findById(doctorId);
+        if (!doctor) {
+            return res.status(404).json({ message: "Doctor not found" });
         }
 
         // Find records using doctor id in patientRecord
@@ -71,7 +75,7 @@ router.get("/", verifyToken, async (req, res) => {
             })
         );
 
-        res.status(200).json({ patientRecords: populatedRecords, recordDetails });
+        res.status(200).json({ patientRecords: populatedRecords, recordDetails, doctor });
     } catch (error) {
         console.error("🚨 Error fetching patient records:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
