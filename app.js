@@ -10,6 +10,7 @@ import patients from "./routes/patients.js"
 import conversation from "./routes/conversation.js"
 import patientSummary from "./routes/patientSummary.js"
 import openChat from "./routes/openChat.js"
+import docDetails from "./routes/docDetails.js"
 
 
 
@@ -43,6 +44,7 @@ app.use('/patients', patients); // get the list of patients who interacted with 
 app.use("/conversation", conversation); // get conversation between particular doctor and patient
 app.use("/patientSummary", patientSummary); // get summary of the patientRecord
 app.use("/openChat", openChat); // get only the part of the conversation related to this record
+app.use("/docDetails", docDetails); // post the doctor details
 
 
 export default app;

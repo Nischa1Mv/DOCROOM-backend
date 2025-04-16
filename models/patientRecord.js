@@ -6,15 +6,15 @@ const patientRecordSchema = new mongoose.Schema({
     doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     timeStampBegin: { type: Date, required: true },
     timestampEnd: { type: Date },
-    BotSummary: {
-        reportedSymptoms: String,
-        aiAnalysis: String,
-        patientApproachMessage: String,
-        priorityStatus: { type: String, enum: ['high', 'medium', 'low'] },
-        aiSummary: String,
-        AIDiagnosis: String,
+    botSummary: {
+        reportedSymptoms: { type: String },
+        aiAnalysis: { type: String },
+        patientApproachMessage: { type: String },
+        priorityStatus: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'] },
+        aiSummary: { type: String },
+        aiDiagnosis: { type: String },
     },
-    DoctorResponse: String,
+    doctorResponse: { type: String },
     isClosed: { type: Boolean, default: false },
 }, { timestamps: true });
 
