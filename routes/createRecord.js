@@ -98,7 +98,7 @@ router.post("/", async (req, res) => {
                 patientApproachMessage: BotSummary.patientApproachMessage,
                 priorityStatus: BotSummary.priorityStatus,
                 aiSummary: BotSummary.aiSummary,
-                AIDiagnosis: BotSummary.AIDiagnosis,
+                aiDiagnosis: BotSummary.aiDiagnosis,
             },
 
         });
