@@ -2,17 +2,19 @@
 import mongoose from 'mongoose';
 
 const patientRecordSchema = new mongoose.Schema({
-    
     patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
-    timeStampBegin: { type: Date, default: Date.now },
-    BOT: {
-        reportedSymptoms: String,
-        aiAnalysis: String,
-        patientApproachMessage: String,
-        priorityStatus: { type: String, enum: ['high', 'medium', 'low'] },
-        aiSummary: String,
-        AIDiagnosis: String,
+    doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    timeStampBegin: { type: String, required: true },
+    timestampEnd: { type: String },
+    botSummary: {
+        reportedSymptoms: [{ type: String }],
+        aiAnalysis: { type: String },
+        patientApproachMessage: { type: String },
+        priorityStatus: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'] },
+        aiSummary: { type: String },
+        aiDiagnosis: { type: String },
     },
+    doctorResponse: { type: String },
     isClosed: { type: Boolean, default: false },
 }, { timestamps: true });
 

@@ -27,13 +27,14 @@ const verifyToken = (req, res, next) => {
 router.get("/:id", verifyToken, async (req, res) => {
     try {
         const { id: patientId } = req.params;
+        const { id: doctorId } = req.user;
 
         if (!patientId) {
             return res.status(400).json({ message: "Patient ID is required" });
         }
 
-        const conversations = await Conversation.find({ patient: patientId });
-        const messages = conversations.flatMap(convo => convo.messages || []);
+        const conversation = await Conversation.find({ patient: patientId, doctor: doctorId })[0];
+        const messages = conversation.messages;
 
         return res.status(200).json({
             message: "Messages fetched successfully",

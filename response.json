@@ -1,0 +1,35 @@
+{
+    "patientDetails": {
+        "name": "Ravi Sharma",
+        "phoneNumber": "+1234567890",
+        "age": "58",
+        "gender": "Male"
+    },
+    "doctorSpecialization": "Cardiology",
+    "conversation": [
+        {
+            "sender": "bot",
+            "message": "Hello, how can I assist you?",
+            "timestamp": "2023-10-01T12:00:00.000Z"
+        },
+        {
+            "sender": "patient",
+            "message": "Hello, I’m feeling a heavy, squeezing pain in my chest for the past hour. It’s hard to breathe, and I feel dizzy and a bit sweaty. Should I be worried?",
+            "timestamp": "2023-10-01T12:01:00.000Z"
+        }
+    ],
+    "BotSummary": {
+        "reportedSymptoms": [
+            "chest tightness (10 min)",
+            "shortness of breath",
+            "dizziness",
+            "sweating",
+            "no fever"
+        ],
+        "aiAnalysis": "Risk Level: High Risk\nPossible Concern: Cardiac or pulmonary emergency\nAI Confidence: 90%\nSuggested Action: Immediate escalation recommended.",
+        "patientApproachMessage": "Hello, I’m feeling a heavy, squeezing pain in my chest for the past hour. It’s hard to breathe, and I feel dizzy and a bit sweaty. Should I be worried?",
+        "priorityStatus": "High",
+        "aiSummary": "Patient reports chest pain, breathlessness, and dizziness. Signs of a possible cardiac event (e.g., angina or heart attack). Chest pain + breathlessness + dizziness flagged as critical. Urgent medical review advised.",
+        "AIDiagnosis": "Based on the presented symptoms (chest pain, shortness of breath, dizziness, and sweating), immediate escalation to emergency care is advised. Patient should be instructed to seek urgent medical attention at the nearest hospital or call emergency services"
+    }
+}

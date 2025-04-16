@@ -44,10 +44,10 @@ router.get("/:id", verifyToken, async (req, res) => {
         // Create a summary response
         const patientSummary = {
             patient: patientRecord.patient,
-            reportedSymptoms: patientRecord.BOT?.reportedSymptoms || "N/A",
-            aiDiagnosis: patientRecord.BOT?.AIDiagnosis || "N/A",
-            priorityStatus: patientRecord.BOT?.priorityStatus || "N/A",
-            aiSummary: patientRecord.BOT?.aiSummary || "N/A",
+            reportedSymptoms: patientRecord.botSummary?.reportedSymptoms || "N/A",
+            aiDiagnosis: patientRecord.botSummary?.aiDiagnosis || "N/A",
+            priorityStatus: patientRecord.botSummary?.priorityStatus || "N/A",
+            aiSummary: patientRecord.botSummary?.aiSummary || "N/A",
             recordedAt: patientRecord.timeStampBegin,
         };
 
