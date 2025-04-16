@@ -3,6 +3,7 @@ import PatientRecord from "../models/patientRecord.js";
 import Patient from "../models/patientModel.js";
 import Conversation from "../models/conversation.js";
 import jwt from "jsonwebtoken";
+import { User } from "../models/userModel.js";
 
 const router = express.Router();
 
@@ -49,13 +50,19 @@ router.post("/", verifyToken, async (req, res) => {
 
             const conversationId = conversation._id;
 
+
+            // Fetch doctor name from Doctor model (you'll need to import the Doctor model)
+            const doctor = await User.findById(doctorId);
+            const doctorName = doctor ? doctor.name : 'Unknown Doctor';
+
+
             // Step 3: Append the final response to the conversation
             const updatedConversation = await Conversation.findByIdAndUpdate(
                 conversationId,
                 {
                     $push: {
                         messages: {
-                            sender: "doctor",
+                            sender: doctorName,
                             message: finalResponse,
                             timestamp: new Date(),
                         },
@@ -71,7 +78,7 @@ router.post("/", verifyToken, async (req, res) => {
             res.status(200).json({
                 message: "Message sent and patient record closed successfully",
                 data: {
-                    sender: "doctor",
+                    sender: doctorName,
                     message: finalResponse,
                     timestamp: new Date(),
                 },
@@ -100,13 +107,17 @@ router.post("/", verifyToken, async (req, res) => {
 
             const conversationId = conversation._id;
 
+            // Fetch doctor name from Doctor model (you'll need to import the Doctor model)
+            const doctor = await User.findById(conversation.doctor);
+            const doctorName = doctor ? doctor.name : 'Unknown Doctor';
+
             // Step 3: Append the final response to the conversation
             const updatedConversation = await Conversation.findByIdAndUpdate(
                 conversationId,
                 {
                     $push: {
                         messages: {
-                            sender: "doctor",
+                            sender: doctorName,
                             message: finalResponse,
                             timestamp: new Date(),
                         },
@@ -128,7 +139,7 @@ router.post("/", verifyToken, async (req, res) => {
             res.status(200).json({
                 message: "Message sent and patient record closed successfully",
                 data: {
-                    sender: "doctor",
+                    sender: doctor,
                     message: finalResponse,
                     timestamp: new Date(),
                 },

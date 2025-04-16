@@ -40,9 +40,9 @@ router.get("/", verifyToken, async (req, res) => {
         }
 
         // Find records using doctor id in patientRecord
-        const patientRecords = await PatientRecord.find({ doctor: doctorId });
+        const patientRecords = await PatientRecord.find({ doctor: doctorId, isClosed: true });
         if (!patientRecords || patientRecords.length === 0) {
-            return res.status(404).json({ message: "No patient records found" });
+            return res.status(200).json({ patientRecords: [], recordDetails: [] });
         }
 
         // Extract record IDs and respective patient IDs
@@ -58,7 +58,7 @@ router.get("/", verifyToken, async (req, res) => {
         const populatedRecords = await Promise.all(
             recordDetails.map(async ({ recordId, patientId, aiSummary, priorityStatus, recordedAt }) => {
                 const patient = await Patient.findById(patientId);
-                return { 
+                return {
                     recordId,
                     id: patient._id,
                     name: patient.name,
