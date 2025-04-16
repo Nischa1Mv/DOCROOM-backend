@@ -1,5 +1,5 @@
 import express from "express";
-import { User } from "../models/userModel.js";
+import Patient from "../models/patientModel.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import PatientRecord from "../models/patientRecord.js";
@@ -53,7 +53,7 @@ router.get("/", verifyToken, async (req, res) => {
         // Fetch patient details using patient IDs
         const populatedRecords = await Promise.all(
             recordDetails.map(async ({ recordId, patientId, aiSummary }) => {
-                const patient = await User.findById(patientId);
+                const patient = await Patient.findById(patientId);
                 return { recordId, patient, aiSummary };
             })
         );
