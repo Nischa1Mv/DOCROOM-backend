@@ -40,7 +40,7 @@ router.get("/", verifyToken, async (req, res) => {
             path: "patientRecords",
             match: { isClosed: false },
             populate: { path: "patient", select: "name age gender" }, // Correct field name
-            select: "BOT timeStampBegin patient", // Correct selection of fields
+            select: "BotSummary timeStampBegin patient", // Correct selection of fields
         });
 
         if (!doctor) {
@@ -55,8 +55,8 @@ router.get("/", verifyToken, async (req, res) => {
                 name: record.patient?.name || "Unknown",
                 age: record.patient?.age || "N/A",
                 gender: record.patient?.gender || "N/A",
-                aiSummary: record.BOT?.aiSummary || "N/A",
-                priorityStatus: record.BOT?.priorityStatus || "N/A",
+                aiSummary: record.BotSummary?.aiSummary || "N/A",
+                priorityStatus: record.BotSummary?.priorityStatus || "N/A",
                 recordedAt: record.timeStampBegin || "N/A",
             }));
         }

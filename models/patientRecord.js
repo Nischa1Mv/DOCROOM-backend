@@ -14,7 +14,7 @@ const patientRecordSchema = new mongoose.Schema({
         aiSummary: String,
         AIDiagnosis: String,
     },
-    DoctorResponse: String;
+    DoctorResponse: String,
     isClosed: { type: Boolean, default: false },
 }, { timestamps: true });
 
