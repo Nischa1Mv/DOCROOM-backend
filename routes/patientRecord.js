@@ -1,8 +1,9 @@
 import express from "express";
-import Patient from "../models/patientModel.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import Patient from "../models/patientModel.js";
 import PatientRecord from "../models/patientRecord.js";
+
 
 dotenv.config();
 const router = express.Router();
@@ -32,6 +33,7 @@ const verifyToken = (req, res, next) => {
 router.get("/", verifyToken, async (req, res) => {
     try {
         const { id: doctorId } = req.user;
+        console.log("Doctor ID:", doctorId);
 
         if (!doctorId) {
             return res.status(400).json({ message: "Doctor ID is required" });
@@ -47,7 +49,7 @@ router.get("/", verifyToken, async (req, res) => {
         const recordDetails = patientRecords.map((record) => ({
             recordId: record._id,
             patientId: record.patient,
-            aiSummary: record.BotSummary.aiSummary,
+            aiSummary: record.botSummary.aiSummary,
         }));
 
         // Fetch patient details using patient IDs
@@ -58,7 +60,7 @@ router.get("/", verifyToken, async (req, res) => {
             })
         );
 
-        res.status(200).json({ patientRecords: populatedRecords });
+        res.status(200).json({ patientRecords: populatedRecords, recordDetails });
     } catch (error) {
         console.error("🚨 Error fetching patient records:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -71,10 +73,23 @@ export default router;
 // {
 //     "patientRecords": [
 //         {
-//             "_id": "64e2b8f1d3f3a5f4c4e2b8f1",
+//             "recordId": "67fff1ef388181096f921891",
 //             "patient": {
-//                 "_id": "64e2b8f1d3f3a5f4c4e2b8f0",
-//                 "name": "John Doe",
-//                 "phoneNumber": "1234567890",
-//                 "age": 30,
-//  
+//                 "_id": "67fff1ef388181096f92188d",
+//                 "name": "Sahana Reddy",
+//                 "phoneNumber": "+919876543210",
+//                 "age": 45,
+//                 "gender": "Female",
+//                 "createdAt": "2025-04-16T18:07:43.038Z",
+//                 "updatedAt": "2025-04-16T18:07:43.038Z",
+//                 "__v": 0
+//             }
+//         }
+//     ],
+//     "recordDetails": [
+//         {
+//             "recordId": "67fff1ef388181096f921891",
+//             "patientId": "67fff1ef388181096f92188d"
+//         }
+//     ]
+// }

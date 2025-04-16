@@ -46,3 +46,20 @@ router.post("/", verifyToken, async (req, res) => {
     res.status(200).json({ message: "Doctor details updated successfully", doctor: updatedDoctor });
 });
 export default router;
+
+//example response
+// {
+//     "message": "Doctor details updated successfully",
+//     "doctor": {
+//         "_id": "67fff0dfb43947b04b74f17a",
+//         "patients": [],
+//         "email": "test1@test1.com",
+//         "password": "$2b$10$gMmK8rNJvbklpvJ4xdE38ux44giXdC4uSdYRpRqnGnaIsEgGVqbri",
+//         "name": "Dr. Anjali Mehra",
+//         "phone": "+919999888877",
+//         "specialization": "Pulmonology",
+//         "createdAt": "2025-04-16T18:03:11.332Z",
+//         "updatedAt": "2025-04-16T18:07:37.053Z",
+//         "__v": 0
+//     }
+// }
