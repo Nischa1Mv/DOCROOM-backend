@@ -40,7 +40,7 @@ router.get("/", verifyToken, async (req, res) => {
         }
 
         // Find records using doctor id in patientRecord
-        const patientRecords = await PatientRecord.find({ doctor: doctorId, isClosed: true });
+        const patientRecords = await PatientRecord.find({ doctor: doctorId, isClosed: false });
         if (!patientRecords || patientRecords.length === 0) {
             return res.status(200).json({ patientRecords: [], recordDetails: [] });
         }
