@@ -6,9 +6,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     name: { type: String, },
     phone: String,
-    specialization: String,  // Fixed typo
-    patients: [{ type: mongoose.Schema.Types.ObjectId, ref: "Patient" }],
-    patientRecords: [{ type: mongoose.Schema.Types.ObjectId, ref: "PatientRecord" }],
+    specialization: String,
 }, { timestamps: true });
 
 export const User = mongoose.model("User", userSchema);

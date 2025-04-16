@@ -2,10 +2,11 @@
 import mongoose from 'mongoose';
 
 const patientRecordSchema = new mongoose.Schema({
-    
     patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
+    doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     timeStampBegin: { type: Date, default: Date.now },
-    BOT: {
+    timestampEnd: { type: Date, default: Date.now },
+    BotSummary: {
         reportedSymptoms: String,
         aiAnalysis: String,
         patientApproachMessage: String,
@@ -13,6 +14,7 @@ const patientRecordSchema = new mongoose.Schema({
         aiSummary: String,
         AIDiagnosis: String,
     },
+    DoctorResponse: String;
     isClosed: { type: Boolean, default: false },
 }, { timestamps: true });
 
