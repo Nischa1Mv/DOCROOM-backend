@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
     }
 
     try {
-        const decoded = jwt.verify(token, process.env.SECRET);
+        req.user = jwt.verify(token, process.env.SECRET);
         next();
     } catch (error) {
         res.status(400).json({ message: "Invalid token." });
@@ -30,6 +30,10 @@ router.post("/", verifyToken, async (req, res) => {
     try {
         const { patientRecordId, finalResponse, patientId } = req.body;
         const { id: doctorId } = req.user;
+        console.log("Doctor ID:", doctorId);
+        console.log("Patient ID:", patientId);
+        console.log("Patient Record ID:", patientRecordId);
+        console.log("Final Response:", finalResponse);
 
         if (!finalResponse) {
             return res.status(400).json({ message: " Final Response are required" });
@@ -118,7 +122,7 @@ router.post("/", verifyToken, async (req, res) => {
             // Step 4: Mark the patient record as closed
             patientRecord.isClosed = true;
             patientRecord.timestampEnd = new Date(); // Update the end timestamp
-            patientRecord.DoctorResponse = finalResponse; // Save the doctor's response
+            patientRecord.doctorResponse = finalResponse; // Save the doctor's response
             await patientRecord.save();
 
             res.status(200).json({
@@ -140,9 +144,9 @@ export default router;
 // // Example response structure
 // {
 //     "message": "Message sent and patient record closed successfully",
-//     "data": {
+//         "data": {
 //         "sender": "doctor",
-//         "message": "AI suggests a possible viral infection.",
-//         "timestamp": "2025-04-09T09:30:51.105Z"
+//             "message": "Hello Sahana, this is Dr. Aarav Mehta. Just wanted to check in and see how you're feeling after our consultation. Has the cough improved at all? Are you still experiencing any breathlessness or wheezing? Please feel free to update me if there are any changes or if you need further assistance.",
+//                 "timestamp": "2025-04-16T20:12:59.056Z"
 //     }
 // }
