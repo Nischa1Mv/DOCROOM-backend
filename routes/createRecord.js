@@ -61,7 +61,7 @@ router.post("/", async (req, res) => {
                 patientApproachMessage: BotSummary.patientApproachMessage,
                 priorityStatus: BotSummary.priorityStatus,
                 aiSummary: BotSummary.aiSummary,
-                AIDiagnosis: BotSummary.AIDiagnosis,
+                aiDiagnosis: BotSummary.AIDiagnosis,
             },
         });
         await record.save({ session });
@@ -91,16 +91,7 @@ router.post("/", async (req, res) => {
             patient,
             record,
             doctor,
-            conversation: conversation,
-            BotSummary: {
-                reportedSymptoms: BotSummary.reportedSymptoms,
-                aiAnalysis: BotSummary.aiAnalysis,
-                patientApproachMessage: BotSummary.patientApproachMessage,
-                priorityStatus: BotSummary.priorityStatus,
-                aiSummary: BotSummary.aiSummary,
-                aiDiagnosis: BotSummary.aiDiagnosis,
-            },
-
+            conversation,
         });
 
     } catch (error) {
