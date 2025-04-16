@@ -4,8 +4,8 @@ import mongoose from 'mongoose';
 const patientRecordSchema = new mongoose.Schema({
     patient: { type: mongoose.Schema.Types.ObjectId, ref: 'Patient', required: true },
     doctor: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-    timeStampBegin: { type: Date, required: true },
-    timestampEnd: { type: Date },
+    timeStampBegin: { type: String, required: true },
+    timestampEnd: { type: String },
     botSummary: {
         reportedSymptoms: [{ type: String }],
         aiAnalysis: { type: String },

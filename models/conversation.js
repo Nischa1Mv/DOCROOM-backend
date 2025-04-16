@@ -4,7 +4,7 @@ const messageSchema = new mongoose.Schema({
 
     sender: { type: String, enum: ["patient", "doctor", "bot"], required: true },
     message: { type: String, required: true },
-    timestamp: { type: Date, default: Date.now }
+    timestamp: { type: String, required: true },
 });
 
 const conversationSchema = new mongoose.Schema({
