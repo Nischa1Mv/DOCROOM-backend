@@ -33,7 +33,7 @@ router.get("/:id", verifyToken, async (req, res) => {
             return res.status(400).json({ message: "Patient ID is required" });
         }
 
-        const conversation = await Conversation.find({ patient: patientId, doctor: doctorId })[0];
+        const conversation = await Conversation.findOne({ patient: patientId, doctor: doctorId });
         const messages = conversation.messages;
 
         return res.status(200).json({
