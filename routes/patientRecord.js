@@ -50,13 +50,24 @@ router.get("/", verifyToken, async (req, res) => {
             recordId: record._id,
             patientId: record.patient,
             aiSummary: record.botSummary.aiSummary,
+            recordedAt: record.timeStampBegin,
+            priorityStatus: record.botSummary.priorityStatus,
         }));
 
         // Fetch patient details using patient IDs
         const populatedRecords = await Promise.all(
-            recordDetails.map(async ({ recordId, patientId, aiSummary }) => {
+            recordDetails.map(async ({ recordId, patientId, aiSummary, priorityStatus, recordedAt }) => {
                 const patient = await Patient.findById(patientId);
-                return { recordId, patient, aiSummary };
+                return { 
+                    recordId,
+                    id: patient._id,
+                    name: patient.name,
+                    age: patient.age,
+                    gender: patient.gender,
+                    aiSummary,
+                    priorityStatus,
+                    recordedAt
+                };
             })
         );
 
