@@ -89,7 +89,18 @@ router.post("/", async (req, res) => {
         res.status(200).json({
             message: "Operation completed successfully",
             patient,
-            record
+            record,
+            doctor,
+            conversation: conversation,
+            BotSummary: {
+                reportedSymptoms: BotSummary.reportedSymptoms,
+                aiAnalysis: BotSummary.aiAnalysis,
+                patientApproachMessage: BotSummary.patientApproachMessage,
+                priorityStatus: BotSummary.priorityStatus,
+                aiSummary: BotSummary.aiSummary,
+                AIDiagnosis: BotSummary.AIDiagnosis,
+            },
+
         });
 
     } catch (error) {
