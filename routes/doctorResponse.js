@@ -28,64 +28,107 @@ const verifyToken = (req, res, next) => {
 // Send Message on Behalf of Doctor and Close the Patient Record
 router.post("/", verifyToken, async (req, res) => {
     try {
-        const { patientRecordId, finalResponse } = req.body;
+        const { patientRecordId, finalResponse, patientId } = req.body;
 
-        if (!patientRecordId || !finalResponse) {
-            return res.status(400).json({ message: "Patient Record ID and Final Response are required" });
+        if (!finalResponse) {
+            return res.status(400).json({ message: " Final Response are required" });
         }
+        if (patientId && !patientRecordId) {
 
-        // Step 1: Find the Patient Record 
-        const patientRecord = await PatientRecord.findById(patientRecordId);
 
-        if (!patientRecord) {
-            return res.status(404).json({ message: "Patient record not found" });
-        }
+            const conversation = await Conversation.findOne({ patient: patientId, doctor: doctorId });
 
-        const patientId = patientRecord.patient;
-        if (!patientId) {
-            return res.status(404).json({ message: "Patient ID not found in the record" });
-        }
+            if (!conversation) {
+                return res.status(404).json({ message: "Conversation not found" });
+            }
 
-        // Step 2: Find the patient's conversation ID
-        const patient = await Patient.findById(patientId).select("conversation");
+            const conversationId = conversation._id;
 
-        if (!patient || !patient.conversation) {
-            return res.status(404).json({ message: "Patient or conversation not found" });
-        }
-
-        const conversationId = patient.conversation;
-
-        // Step 3: Append the final response to the conversation
-        const updatedConversation = await Conversation.findByIdAndUpdate(
-            conversationId,
-            {
-                $push: {
-                    messages: {
-                        sender: "doctor",
-                        message: finalResponse,
-                        timestamp: new Date(),
+            // Step 3: Append the final response to the conversation
+            const updatedConversation = await Conversation.findByIdAndUpdate(
+                conversationId,
+                {
+                    $push: {
+                        messages: {
+                            sender: "doctor",
+                            message: finalResponse,
+                            timestamp: new Date(),
+                        },
                     },
                 },
-            },
-            { new: true }
-        );
+                { new: true }
+            );
 
-        if (!updatedConversation) {
-            return res.status(404).json({ message: "Conversation not found" });
+            if (!updatedConversation) {
+                return res.status(404).json({ message: "Conversation not found" });
+            }
+
+            res.status(200).json({
+                message: "Message sent and patient record closed successfully",
+                data: {
+                    sender: "doctor",
+                    message: finalResponse,
+                    timestamp: new Date(),
+                },
+            });
+
         }
+        if (!patientId && patientRecordId) {
 
-        // Step 4: Mark the patient record as closed
-        patientRecord.isClosed = true;
-        await patientRecord.save();
+            // Step 1: Find the Patient Record 
+            const patientRecord = await PatientRecord.findById(patientRecordId);
 
-        res.status(200).json({
-            message: "Message sent and patient record closed successfully",
-            data: {
-                sender: "doctor",
-                message: finalResponse,
-                timestamp: new Date(),
-            },
-        });
+            if (!patientRecord) {
+                return res.status(404).json({ message: "Patient record not found" });
+            }
+
+            const patientId = patientRecord.patient;
+            if (!patientId) {
+                return res.status(404).json({ message: "Patient ID not found in the record" });
+            }
+
+            const conversation = await Conversation.findOne({ patient: patientId, doctor: doctorId });
+
+            if (!conversation) {
+                return res.status(404).json({ message: "Conversation not found" });
+            }
+
+            const conversationId = conversation._id;
+
+            // Step 3: Append the final response to the conversation
+            const updatedConversation = await Conversation.findByIdAndUpdate(
+                conversationId,
+                {
+                    $push: {
+                        messages: {
+                            sender: "doctor",
+                            message: finalResponse,
+                            timestamp: new Date(),
+                        },
+                    },
+                },
+                { new: true }
+            );
+
+            if (!updatedConversation) {
+                return res.status(404).json({ message: "Conversation not found" });
+            }
+
+            // Step 4: Mark the patient record as closed
+            patientRecord.isClosed = true;
+            patientRecord.timestampEnd = new Date(); // Update the end timestamp
+            patientRecord.DoctorResponse = finalResponse; // Save the doctor's response
+            await patientRecord.save();
+
+            res.status(200).json({
+                message: "Message sent and patient record closed successfully",
+                data: {
+                    sender: "doctor",
+                    message: finalResponse,
+                    timestamp: new Date(),
+                },
+            });
+        }
     } catch (error) {
         console.error("Error sending message:", error);
         res.status(500).json({ message: "Internal server error" });
