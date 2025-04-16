@@ -55,7 +55,7 @@ router.post("/", async (req, res) => {
             patient: patient._id,
             doctor: doctor._id,
             timeStampBegin: conversation[0].timestamp,
-            BotSummary: {
+            botSummary: {
                 reportedSymptoms: BotSummary.reportedSymptoms,
                 aiAnalysis: BotSummary.aiAnalysis,
                 patientApproachMessage: BotSummary.patientApproachMessage,
