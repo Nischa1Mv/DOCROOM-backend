@@ -8,12 +8,12 @@
         "doctorSpecialization": "Cardiology",
         "conversation": [
             {
-                "role": "bot",
+                "sender": "bot",
                 "messages": "Hello, how can I assist you?",
                 "timestamp": "2023-10-01T12:00:00Z"
             },
             {
-                "role": "patient",
+                "sender": "patient",
                 "messages": "Hello, I’m feeling a heavy, squeezing pain in my chest for the past hour. It’s hard to breathe, and I feel dizzy and a bit sweaty. Should I be worried?",
                 "timestamp": "2023-10-01T12:01:00Z"
             }

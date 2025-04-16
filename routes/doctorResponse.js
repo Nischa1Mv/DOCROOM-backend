@@ -29,6 +29,7 @@ const verifyToken = (req, res, next) => {
 router.post("/", verifyToken, async (req, res) => {
     try {
         const { patientRecordId, finalResponse, patientId } = req.body;
+        const { id: doctorId } = req.user;
 
         if (!finalResponse) {
             return res.status(400).json({ message: " Final Response are required" });

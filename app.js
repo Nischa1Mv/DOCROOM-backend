@@ -4,12 +4,12 @@ import passport from "passport";
 import 'dotenv/config';
 import authRoute from "./routes/authRoute.js";
 import PatientRecord from "./routes/patientRecord.js";
-import createPatient from "./routes/createPatient.js";
-import botSummary from "./routes/botSummary.js";
+import createRecord from "./routes/createRecord.js";
 import doctorResponse from "./routes/doctorResponse.js"
 import patients from "./routes/patients.js"
 import conversation from "./routes/conversation.js"
 import patientSummary from "./routes/patientSummary.js"
+import openChat from "./routes/openChat.js"
 
 
 
@@ -36,13 +36,13 @@ app.get('/', function (_, res) {
 });
 
 app.use('/auth', authRoute);
-app.use('/patientRecord', PatientRecord)
-app.use('/createPatient', createPatient);
-app.use('/botSummary', botSummary);
-app.use('/doctorResponse', doctorResponse);
-app.use('/patients', patients);
-app.use("/conversation", conversation)
-app.use("/patientSummary", patientSummary)
+app.use('/patientRecord', PatientRecord); // get the list of active patientRecords
+app.use('/createRecord', createRecord); // create a new patientRecord
+app.use('/doctorResponse', doctorResponse); // post the doctor response to the db
+app.use('/patients', patients); // get the list of patients who interacted with the doctor
+app.use("/conversation", conversation); // get conversation between particular doctor and patient
+app.use("/patientSummary", patientSummary); // get summary of the patientRecord
+app.use("/openChat", openChat); // get only the part of the conversation related to this record
 
 
 export default app;

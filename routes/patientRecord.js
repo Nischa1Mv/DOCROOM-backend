@@ -2,6 +2,7 @@ import express from "express";
 import { User } from "../models/userModel.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
+import PatientRecord from "../models/patientRecord.js";
 
 dotenv.config();
 const router = express.Router();
@@ -27,6 +28,7 @@ const verifyToken = (req, res, next) => {
         res.status(400).json({ message: "Invalid token." });
     }
 };
+
 router.get("/", verifyToken, async (req, res) => {
     try {
         const { id: doctorId } = req.user;
@@ -35,33 +37,28 @@ router.get("/", verifyToken, async (req, res) => {
             return res.status(400).json({ message: "Doctor ID is required" });
         }
 
-        // Find doctor and populate patient records
-        const doctor = await User.findById(doctorId).populate({
-            path: "patientRecords",
-            match: { isClosed: false },
-            populate: { path: "patient", select: "name age gender" }, // Correct field name
-            select: "BotSummary timeStampBegin patient", // Correct selection of fields
-        });
-
-        if (!doctor) {
-            return res.status(404).json({ message: "Doctor not found" });
+        // Find records using doctor id in patientRecord
+        const patientRecords = await PatientRecord.find({ doctor: doctorId });
+        if (!patientRecords || patientRecords.length === 0) {
+            return res.status(404).json({ message: "No patient records found" });
         }
 
-        let patientRecords = [];
+        // Extract record IDs and respective patient IDs
+        const recordDetails = patientRecords.map((record) => ({
+            recordId: record._id,
+            patientId: record.patient,
+            aiSummary: record.BotSummary.aiSummary,
+        }));
 
-        if (doctor.patientRecords && doctor.patientRecords.length > 0) {
-            patientRecords = doctor.patientRecords.map((record) => ({
-                id: record._id, // Include the record ID
-                name: record.patient?.name || "Unknown",
-                age: record.patient?.age || "N/A",
-                gender: record.patient?.gender || "N/A",
-                aiSummary: record.BotSummary?.aiSummary || "N/A",
-                priorityStatus: record.BotSummary?.priorityStatus || "N/A",
-                recordedAt: record.timeStampBegin || "N/A",
-            }));
-        }
+        // Fetch patient details using patient IDs
+        const populatedRecords = await Promise.all(
+            recordDetails.map(async ({ recordId, patientId, aiSummary }) => {
+                const patient = await User.findById(patientId);
+                return { recordId, patient, aiSummary };
+            })
+        );
 
-        res.status(200).json({ patientRecords });
+        res.status(200).json({ patientRecords: populatedRecords });
     } catch (error) {
         console.error("🚨 Error fetching patient records:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
@@ -69,3 +66,15 @@ router.get("/", verifyToken, async (req, res) => {
 });
 
 export default router;
+
+//example response
+// {
+//     "patientRecords": [
+//         {
+//             "_id": "64e2b8f1d3f3a5f4c4e2b8f1",
+//             "patient": {
+//                 "_id": "64e2b8f1d3f3a5f4c4e2b8f0",
+//                 "name": "John Doe",
+//                 "phoneNumber": "1234567890",
+//                 "age": 30,
+//  
