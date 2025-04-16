@@ -92,3 +92,61 @@ router.get("/:id", verifyToken, async (req, res) => {
 });
 
 export default router;
+//sample response
+// {
+//     "messages": [
+//         {
+//             "sender": "bot",
+//             "message": "Hello! I'm here to assist with your respiratory concerns. What symptoms are you currently experiencing?",
+//             "timestamp": "2025-04-16T07:00:00.000Z",
+//             "_id": "680009d0ea2a4587bfaceb67"
+//         },
+//         {
+//             "sender": "patient",
+//             "message": "I have a persistent cough for over a week, especially at night. I'm also wheezing a bit.",
+//             "timestamp": "2025-04-16T07:01:15.000Z",
+//             "_id": "680009d0ea2a4587bfaceb68"
+//         },
+//         {
+//             "sender": "bot",
+//             "message": "Thanks for sharing. Are you producing any phlegm or is it a dry cough?",
+//             "timestamp": "2025-04-16T07:01:40.000Z",
+//             "_id": "680009d0ea2a4587bfaceb69"
+//         },
+//         {
+//             "sender": "patient",
+//             "message": "Mostly dry, but occasionally there’s some white mucus.",
+//             "timestamp": "2025-04-16T07:02:05.000Z",
+//             "_id": "680009d0ea2a4587bfaceb6a"
+//         },
+//         {
+//             "sender": "bot",
+//             "message": "Do you have any history of asthma, allergies, or exposure to dust/smoke?",
+//             "timestamp": "2025-04-16T07:02:30.000Z",
+//             "_id": "680009d0ea2a4587bfaceb6b"
+//         },
+//         {
+//             "sender": "patient",
+//             "message": "Yes, I have dust allergy and mild asthma diagnosed years ago.",
+//             "timestamp": "2025-04-16T07:02:55.000Z",
+//             "_id": "680009d0ea2a4587bfaceb6c"
+//         },
+//         {
+//             "sender": "bot",
+//             "message": "Have you experienced any fever, chest pain, or breathlessness recently?",
+//             "timestamp": "2025-04-16T07:03:20.000Z",
+//             "_id": "680009d0ea2a4587bfaceb6d"
+//         },
+//         {
+//             "sender": "patient",
+//             "message": "Slight breathlessness when climbing stairs, but no fever or chest pain.",
+//             "timestamp": "2025-04-16T07:03:45.000Z",
+//             "_id": "680009d0ea2a4587bfaceb6e"
+//         }
+//     ],
+//         "filterInfo": {
+//         "startTime": "2025-04-16T07:00:00.000Z",
+//             "endTime": "2025-04-16T19:55:04.982Z",
+//                 "totalMessages": 8
+//     }
+// }
