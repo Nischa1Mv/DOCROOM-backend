@@ -10,7 +10,7 @@ const patientRecordSchema = new mongoose.Schema({
         reportedSymptoms: [{ type: String }],
         aiAnalysis: { type: String },
         patientApproachMessage: { type: String },
-        priorityStatus: { type: String, enum: ['HIGH', 'MEDIUM', 'LOW'] },
+        priorityStatus: { type: String, enum: ['Emergency', 'Medium', 'Low'] },
         aiSummary: { type: String },
         aiDiagnosis: { type: String },
     },
